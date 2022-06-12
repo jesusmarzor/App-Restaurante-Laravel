@@ -1,0 +1,47 @@
+version: '3.7'
+services:
+  nginx:
+    image: nginx:stable-alpine
+    container_name: nginx_back_restaurant
+    restart: always
+    ports: 
+      - 8888:80
+    volumes:
+      - ./src:/var/www/html
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php
+      - mysql
+    networks:
+      - laravel
+
+  mysql:
+    image: mysql:5.7
+    container_name: mysql_back_restaurant
+    restart: always
+    environment:
+      MYSQL_DATABASE: $DB_DATABASE
+      MYSQL_USERNAME: $DB_USERNAME
+      MYSQL_PASSWORD: $DB_PASSWORD
+      MYSQL_ROOT_PASSWORD: $DB_ROOT_PASSWORD
+    ports:
+      - 33069:3306
+    volumes:
+      - ./mysql:/var/lib/mysql
+    networks:
+      - laravel
+  
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: php_back_restaurant
+    volumes:
+      - ./src:/var/www/html
+    ports:
+      - 9000:80
+    networks:
+      - laravel
+    
+networks:
+  laravel:
