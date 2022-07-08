@@ -66,7 +66,6 @@ class ReservationController extends Controller
             'name' => $request->name,
             'number' => $request->number,
             'diners' => $request->diners,
-            'tables' => json_encode([])
         ]);
         return response()->json(["response" => true, "message" => "Reserva registrada", "error_list" => $validator->errors()], 201);
     }
